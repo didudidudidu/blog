@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load staticfiles %}
+    <title>{% block title %}Di &amp; Du{% endblock %}</title>
+
+    <!-- meta -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- css -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="{% static 'css/pace.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    {% block custom_css %}{% endblock %}
+    <!-- js -->
+    <script src="{% static 'js/jquery-2.1.3.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/pace.min.js' %}"></script>
+    <script src="{% static 'js/modernizr.custom.js' %}"></script>
+    {% block custom_js %}{% endblock %}
+</head>
+
+<body>
+<div class="container">
+    <header id="site-header">
+        <div class="row">
+            <div class="col-md-4 col-sm-5 col-xs-8">
+                <div class="logo">
+                    <h1><a href="{% url 'index' %}"><b>Di</b> &amp; Du</a></h1>
+                </div>
+            </div><!-- col-md-4 -->
+            <div class="col-md-8 col-sm-7 col-xs-4">
+                <nav class="main-nav" role="navigation">
+                    <div class="navbar-header">
+                        <button type="button" id="trigger-overlay" class="navbar-toggle">
+                            <span class="ion-navicon"></span>
+                        </button>
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="cl-effect-11"><a href="{% url 'index' %}" data-hover="首页">首页</a></li>
+                            <li class="cl-effect-11"><a href="full-width.html" data-hover="博客">博客</a></li>
+                            <li class="cl-effect-11"><a href="about.html" data-hover="关于">关于</a></li>
+                            <li class="cl-effect-11"><a href="contact.html" data-hover="联系">联系</a></li>
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </nav>
+                <div id="header-search-box">
+                    <a id="search-menu" href="#"><span id="search-icon" class="ion-ios-search-strong"></span></a>
+                    <div id="search-form" class="search-form">
+                        <form role="search" method="get" id="searchform" action="#">
+                            <input type="search" placeholder="搜索" required>
+                            <button type="submit"><span class="ion-ios-search-strong"></span></button>
+                        </form>
+                    </div>
+                </div>
+            </div><!-- col-md-8 -->
+        </div>
+    </header>
+</div>
+<div class="copyrights">Collect from <a href="http://www.cssmoban.com/">网页模板</a></div>
+<div class="copyrights">Modified by <a href="http://zmrenwu.com/">追梦人物的博客</a></div>
+
+<div class="content-body">
+    <div class="container">
+        <div class="row">
+
+            {% block content %}
+            {% endblock %}
+
+            <aside class="col-md-4">
+                <div class="widget widget-recent-posts">
+                    <h3 class="widget-title">最新文章</h3>
+                    <ul>
+                        <li>
+                            <a href="#">Django 博客开发入门教程：前言</a>
+                        </li>
+                        <li>
+                            <a href="#">Django 博客使用 Markdown 自动生成文章目录</a>
+                        </li>
+                        <li>
+                            <a href="#">部署 Django 博客</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="widget widget-archives">
+                    <h3 class="widget-title">归档</h3>
+                    <ul>
+                        <li>
+                            <a href="#">2017 年 5 月</a>
+                        </li>
+                        <li>
+                            <a href="#">2017 年 4 月</a>
+                        </li>
+                        <li>
+                            <a href="#">2017 年 3 月</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="widget widget-category">
+                    <h3 class="widget-title">分类</h3>
+                    <ul>
+                        {% for categrot in all_categrot  %}
+                        <li>
+                            <a href="#">{{ categrot.text }} <span class="post-count">(13)</span></a>
+                        </li>
+                        {% empty %}
+                        <li>
+                            <a href="#">无</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="widget widget-tag-cloud">
+                    <h3 class="widget-title">标签云</h3>
+                    <ul>
+                        {% for tag in all_tag %}
+                        <li>
+                            <a href="#">{{ tag.text }}</a>
+                        </li>
+                        {% empty %}
+                        <li>
+                            <a href="#">无</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer id="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <p class="copyright"><a href="#" >DiDu的博客</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Mobile Menu -->
+<div class="overlay overlay-hugeinc">
+    <button type="button" class="overlay-close"><span class="ion-ios-close-empty"></span></button>
+    <nav>
+        <ul>
+            <li><a href="{% url 'index' %}">首页</a></li>
+            <li><a href="full-width.html">博客</a></li>
+            <li><a href="about.html">关于</a></li>
+            <li><a href="contact.html">联系</a></li>
+        </ul>
+    </nav>
+</div>
+
+<script src="{% static 'js/script.js' %}"></script>
+
+</body>
+</html>

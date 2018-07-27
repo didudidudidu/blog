@@ -16,6 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from blog_app.views import IndexView,ArticleView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', IndexView.as_view(), name='index'),
+    path('article/<id>/', ArticleView.as_view(), name='article'),
 ]
