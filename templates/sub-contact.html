@@ -1,0 +1,26 @@
+{% extends 'blog-base.html' %}
+{% block title %}Di &amp; Du-联系{% endblock %}
+{% block content %}
+<main class="col-md-12">
+    <h1 class="page-title">Contact</h1>
+    <article class="post">
+        <div class="entry-content clearfix">
+            <form action="#" method="post" class="contact-form">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <input type="text" name="name" placeholder="姓名" required>
+                        <input type="email" name="email" placeholder="邮箱" required>
+                        <input type="text" name="subject" placeholder="标题" required>
+                        <textarea name="message" rows="7" placeholder="你的建议" required></textarea>
+                        <button class="btn-send btn-5 btn-5b ion-ios-paperplane"><span>写信给我</span></button>
+                    </div>
+                </div>	<!-- row -->
+            </form>
+        </div>
+    </article>
+</main>
+{% endblock %}
+{% block right %}
+{% endblock %}
+
+

@@ -1,0 +1,30 @@
+{% extends 'blog-base.html' %}
+{% block title %}Di &amp; Du-博客{% endblock %}
+{% block content %}
+<main class="col-md-12">
+    {% for post in all_post %}
+        <article class="post post-1">
+            <header class="entry-header">
+                <h1 class="entry-title">
+                    <a href="{% url 'article' post.id %}">{{ post.titel }}</a>
+                </h1>
+                <div class="entry-meta">
+                    <span class="post-category"><a href="{% url 'article' post.id %}">{{ post.category }}</a></span>
+                    <span class="post-date"><a href="{% url 'article' post.id %}">{{ post.created_time|date:"Y-m-d" }}</a></span>
+                    <span class="post-author"><a href="{% url 'article' post.id %}">{{ post.user }}</a></span>
+                    <span class="comments-link"><a href="{% url 'article' post.id %}">4 评论</a></span>
+                    <span class="views-count"><a href="{% url 'article' post.id %}">588 阅读</a></span>
+                </div>
+            </header>
+            <div class="entry-content clearfix">
+                <p>{{ post.excerpt }}</p>
+                <div class="read-more cl-effect-14">
+                    <a href="{% url 'article' post.id %}" class="more-link">继续阅读 <span class="meta-nav">→</span></a>
+                </div>
+            </div>
+        </article>
+    {% endfor %}
+</main>
+{% endblock %}
+{% block right %}
+{% endblock %}

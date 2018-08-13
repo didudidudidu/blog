@@ -11,10 +11,10 @@
                         </h1>
                         <div class="entry-meta">
                             <span class="post-category"><a href="{% url 'article' post.id %}">{{ post.category }}</a></span>
-                            <span class="post-date"><a href="{% url 'article' post.id %}">{{ post.created_time|date:"Y-m-d" }}</a></span>
+                            <span class="post-date"><a href="{% url 'article' post.id %}">{{ post.created_time|date:"Y-m-d H:i" }}</a></span>
                             <span class="post-author"><a href="{% url 'article' post.id %}">{{ post.user }}</a></span>
                             <span class="comments-link"><a href="{% url 'article' post.id %}">4 评论</a></span>
-                            <span class="views-count"><a href="{% url 'article' post.id %}">588 阅读</a></span>
+                            <span class="views-count"><a href="{% url 'article' post.id %}">{{ post.views }} 阅读</a></span>
                         </div>
                     </header>
                     <div class="entry-content clearfix">
@@ -28,9 +28,15 @@
 
                 <!-- 简单分页效果 -->
                 <div class="pagination-simple">
-                    <a href="#">上一页</a>
-                    <span class="current">第 6 页 / 共 11 页</span>
-                    <a href="#">下一页</a>
+                    {% if all_post.has_previous %}
+                        <a href="?page={{ all_post.previous_page_number }}">上一页</a>
+                    {% endif %}
+
+                    <span class="current">第 {{ all_post.number }} 页 / 共 {{ all_post.paginator.num_pages }} 页</span>
+
+                    {% if all_post.has_next %}
+                        <a href="?page={{ all_post.next_page_number }}">下一页</a>
+                    {% endif %}
                 </div>
                 <!--
                 <div class="pagination">
