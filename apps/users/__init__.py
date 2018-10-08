@@ -1,8 +1,8 @@
 from django.apps import AppConfig
 import os
-default_app_config = 'blog_app.PrimaryBlogConfig'
+default_app_config = 'apps.users.PrimaryBlogConfig'
 
-VERBOSE_APP_NAME = "博客管理"
+VERBOSE_APP_NAME = "用户管理"
 
 
 def get_current_app_name(_file):

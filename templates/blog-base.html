@@ -26,12 +26,12 @@
 <div class="container">
     <header id="site-header">
         <div class="row">
-            <div class="col-md-4 col-sm-5 col-xs-8">
+            <div class="col-md-4 col-sm-4 col-xs-4">
                 <div class="logo">
                     <h1><a href="{% url 'index' %}"><b>Di</b> &amp; Du</a></h1>
                 </div>
             </div><!-- col-md-4 -->
-            <div class="col-md-8 col-sm-7 col-xs-4">
+            <div class="col-md-8 col-sm-4 col-xs-8">
                 <nav class="main-nav" role="navigation">
                     <div class="navbar-header">
                         <button type="button" id="trigger-overlay" class="navbar-toggle">
@@ -40,11 +40,18 @@
                     </div>
 
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav navbar-right">
+                        <ul class="nav navbar-nav navbar-left">
                             <li class="cl-effect-11"><a href="{% url 'index' %}" data-hover="首页">首页</a></li>
                             <li class="cl-effect-11"><a href="{% url 'blog' %}" data-hover="博客">博客</a></li>
                             <li class="cl-effect-11"><a href="{% url 'about' %}" data-hover="关于">关于</a></li>
                             <li class="cl-effect-11"><a href="{% url 'contact' %}" data-hover="联系">联系</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            {% if request.user.is_authenticated %}
+                                <li class="cl-effect-11"><a href="{% url 'login' %}" data-hover="{{ request.user.nick_name }}">{{ request.user.nick_name }}</a></li>
+                            {% else %}
+                                <li class="cl-effect-11"><a href="{% url 'login' %}" data-hover="登陆">登陆</a></li>
+                            {% endif %}
                         </ul>
                     </div><!-- /.navbar-collapse -->
                 </nav>
@@ -57,7 +64,7 @@
                         </form>
                     </div>
                 </div>
-            </div><!-- col-md-8 -->
+            </div><!-- col-md-4 -->
         </div>
     </header>
 </div>
@@ -146,6 +153,11 @@
     <button type="button" class="overlay-close"><span class="ion-ios-close-empty"></span></button>
     <nav>
         <ul>
+            {% if request.user.is_authenticated %}
+                <li><a href="{% url 'login' %}" data-hover="{{ request.user.nick_name }}">{{ request.user.nick_name }}</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}" data-hover="登陆">登陆</a></li>
+            {% endif %}
             <li><a href="{% url 'index' %}">首页</a></li>
             <li><a href="{% url 'blog' %}">博客</a></li>
             <li><a href="{% url 'about' %}">关于</a></li>

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from django.db.models import Sum, Count
 
-from .models import Post, Tag
+from blog_app.models import Post, Tag
 
 def context(request):
     all_post = Post.objects.all()

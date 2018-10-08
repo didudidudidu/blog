@@ -9,7 +9,7 @@
                     <span class="post-category"><a href="">{{ article.category }}</a></span>
                     <span class="post-date"><a href="">{{ article.created_time|date:"Y-m-d" }}</a></span>
                     <span class="post-author"><a href="">{{ article.user }}</a></span>
-                    <span class="comments-link"><a href="">4 评论</a></span>
+                    <span class="comments-link"><a href="">{{ article.comments_num }} 评论</a></span>
                     <span class="views-count"><a href="">{{ article.views }} 阅读</a></span>
                 </div>
             </header>
@@ -47,7 +47,7 @@
                 {% csrf_token %}
             </form>
             <div class="comment-list-panel">
-                <h3>评论列表，共 <span>4</span> 条评论</h3>
+                <h3>评论列表，共 <span>{{ article.comments_num }}</span> 条评论</h3>
                 {% for comment in comment_list %}
                     <ul class="comment-list list-unstyled">
                         <li class="comment-item">

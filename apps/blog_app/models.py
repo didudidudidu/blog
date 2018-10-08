@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from django.db import models
-from django.contrib.auth.models import User
+from users.models import UserProfile
 
 
 # Create your models here.
@@ -37,12 +37,18 @@ class Post(models.Model):
     tag = models.ManyToManyField(Tag)
     created_time = models.DateTimeField(default=datetime.now, verbose_name='创建时间')
     modified_time = models.DateTimeField(default=datetime.now, verbose_name='修改时间')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='用户')
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name='用户')
     views = models.PositiveIntegerField(default=0, verbose_name='阅读量')
+    comments_num = models.PositiveIntegerField(default=0, verbose_name='评论数')
 
     def increase_views(self):
         self.views += 1
         self.save(update_fields=['views'])
+
+    def update_comments_num(self):
+        self.comments_num = len(self.comments_set.all())
+        self.save(update_fields=['comments_num'])
+
 
     def __str__(self):
         return self.titel

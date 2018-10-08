@@ -26,7 +26,6 @@ class IndexView(View):
             all_post = Post.objects.filter(created_time__year=year,
                                             created_time__month=month
                                             ).order_by('-created_time')
-
         all_post = all_post.order_by("-created_time")
         page = Paginator(all_post,3)
         page_num = request.GET.get('page', 1)
@@ -38,7 +37,6 @@ class IndexView(View):
         except EmptyPage:
             # 如果页面超出范围，则返回最后一页的结果。
             page = page.page(page.num_pages)
-
 
         return render(request, 'sub-index.html', {
             'all_post': page,
@@ -74,6 +72,7 @@ class ArticleView(View):
             comment.post = article
             # 最终保存到数据库
             comment.save()
+            article.update_comments_num()
             return HttpResponseRedirect(reverse('article', args=[id]))
         else:
             comment_list = article.comments_set.all()
