@@ -20,38 +20,19 @@
         <section class="comment-area" id="comment-area">
             <hr>
             <h3>发表评论</h3>
-            <form action="{% url 'article' article.id %}" method="post" class="comment-form">
-                <div class="row">
-                    <div class="col-md-4">
-                        <label for="id_name">名字：</label>
-                        <input type="text" id="id_name" name="name" value="{{ form.data.name }}" required>
-                        {{ form.name.errors }}
-                    </div>
-                    <div class="col-md-4">
-                        <label for="id_email">邮箱：</label>
-                        <input type="email" id="id_email" name="email" value="{{ form.data.email }}" required>
-                        {{ form.email.errors }}
-                    </div>
-                    <div class="col-md-4">
-                        <label for="id_url">网址：</label>
-                        <input type="text" id="id_url" name="url" value="{{ form.data.url }}">
-                        {{ form.url.errors }}
-                    </div>
-                    <div class="col-md-12">
-                        <label for="id_comment">评论：</label>
-                        <textarea name="text" id="id_comment" required></textarea>
-                        {{ form.text.errors }}
-                        <button type="submit" class="comment-btn">发表</button>
-                    </div>
-                </div>    <!-- row -->
-                {% csrf_token %}
-            </form>
+            <div class="row comment-form">
+                <div class="col-md-12">
+                    <label for="id_comment">评论：</label>
+                    <textarea id="id_comment" required></textarea>
+                    <button type="submit" class="comment-btn" id="form_comments">发表</button>
+                </div>
+            </div>
             <div class="comment-list-panel">
                 <h3>评论列表，共 <span>{{ article.comments_num }}</span> 条评论</h3>
                 {% for comment in comment_list %}
                     <ul class="comment-list list-unstyled">
                         <li class="comment-item">
-                            <span class="nickname">{{ comment.name }}</span>
+                            <span class="nickname">{{ comment.user }}</span>
                             <time class="submit-date" datetime="2012-11-09T23:15:57+00:00">{{ comment.created_time|date:"Y-m-d H:i" }}</time>
                             <div class="text">
                                 {{ comment.text }}
@@ -62,4 +43,37 @@
             </div>
         </section>
     </main>
+
+    <script type="text/javascript">
+        //添加评论
+        $('#form_comments').on('click', function(){
+            var comments = $("#id_comment").val()
+            if(comments == ""){
+                alert("评论不能为空")
+                return
+            }
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url:"{% url 'comments' %}",
+                data:{'article_id':{{ article.id }}, 'comments':comments},
+                async: true,
+                beforeSend:function(xhr, settings){
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function(data) {
+                    if(data.status == 'fail'){
+                        if(data.msg == '用户未登录'){
+                            window.location.href="/login/";
+                        }else{
+                            alert(data.msg)
+                        }
+
+                    }else if(data.status == 'success'){
+                        window.location.reload();//刷新当前页面.
+                    }
+                },
+            });
+        });
+    </script>
 {% endblock %}

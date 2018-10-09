@@ -59,15 +59,13 @@ class Post(models.Model):
 
 
 class Comments(models.Model):
-    name = models.CharField(max_length=10, verbose_name='用户名称')
-    email = models.EmailField(verbose_name='邮箱地址')
-    text = models.TextField(verbose_name='评论内容')
-    url = models.URLField(verbose_name='网址')
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name='文章')
+    user = models.ForeignKey(UserProfile, blank=True, null=True, on_delete=models.CASCADE, verbose_name='用户')
+    post = models.ForeignKey(Post, blank=True, null=True, on_delete=models.CASCADE, verbose_name='文章')
+    text = models.CharField(max_length=50, verbose_name='评论')
     created_time = models.DateTimeField(default=datetime.now, verbose_name='创建时间')
 
     def __str__(self):
-        return self.name
+        return self.text
 
     class Meta:
         verbose_name = '评论表'

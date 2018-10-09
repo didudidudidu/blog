@@ -5,7 +5,7 @@ from django.views.generic.base import View
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Sum, Count
 
-from .models import Post, Categort, Tag
+from .models import Post, Categort, Tag, Comments
 from .forms import CommentFrom
 # Create your views here.
 
@@ -55,32 +55,11 @@ class ArticleView(View):
 
         comment_list = article.comments_set.all()
         article.increase_views()
+        article.update_comments_num()
         return render(request, 'sub-single.html', {
             'article': article,
             'comment_list': comment_list,
         })
-
-    def post(self, request, id):
-        article = Post.objects.get(id=id)
-        article.body = markdown.markdown(article.body)
-        form = CommentFrom(request.POST)
-        if form.is_valid():
-            # 检查到数据是合法的，调用表单的 save 方法保存数据到数据库，
-            # commit=False 的作用是仅仅利用表单的数据生成 Comment 模型类的实例，但还不保存评论数据到数据库。
-            comment = form.save(commit=False)
-            # 将评论和被评论的文章关联起来
-            comment.post = article
-            # 最终保存到数据库
-            comment.save()
-            article.update_comments_num()
-            return HttpResponseRedirect(reverse('article', args=[id]))
-        else:
-            comment_list = article.comments_set.all()
-            return render(request, 'sub-single.html', {
-                'article': article,
-                'comment_list': comment_list,
-                'form':form,
-            })
 
 
 # 文章列表视图
@@ -91,3 +70,27 @@ class BlogListView(View):
         return render(request, 'sub-full-width.html', {
             'all_post': all_post
         })
+
+
+# 评论
+class CommentsView(View):
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return HttpResponse(
+                '{"status":"fail", "msg":"用户未登录"}',
+                content_type='application/json'
+            )
+        article_id = request.POST.get("article_id", 0)
+        comments = request.POST.get("comments", "")
+
+        form = CommentFrom(request.POST)
+        if int(article_id) > 0 and comments:
+            course_comments = Comments()
+            article = Post.objects.get(id=article_id)
+            course_comments.user = request.user
+            course_comments.post = article
+            course_comments.text = comments
+            course_comments.save()
+            return HttpResponse('{"status":"success", "msg":"添加成功"}', content_type='application/json')
+        else:
+            return HttpResponse('{"status":"fail", "msg":"添加失败"}', content_type='application/json')
