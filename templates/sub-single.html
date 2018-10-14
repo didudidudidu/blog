@@ -1,15 +1,16 @@
 {% extends 'blog-base.html' %}
 {% block title %}Di &amp; Du-首页{% endblock %}
 {% block content %}
+    {% load custom_time %}
     <main class="col-md-8">
         <article class="post post-1">
             <header class="entry-header">
                 <h1 class="entry-title">{{ article.titel }}</h1>
                 <div class="entry-meta">
                     <span class="post-category"><a href="">{{ article.category }}</a></span>
-                    <span class="post-date"><a href="">{{ article.created_time|date:"Y-m-d" }}</a></span>
+                    <span class="post-date"><a href="">{{ article.created_time|handel_time }}</a></span>
                     <span class="post-author"><a href="">{{ article.user }}</a></span>
-                    <span class="comments-link"><a href="">{{ article.comments_num }} 评论</a></span>
+                    <span class="comments-link"><a href="">{{ article.get_comments_num }} 评论</a></span>
                     <span class="views-count"><a href="">{{ article.views }} 阅读</a></span>
                 </div>
             </header>
@@ -32,10 +33,10 @@
                 {% for comment in comment_list %}
                     <ul class="comment-list list-unstyled">
                         <li class="comment-item">
-                            <span class="nickname">{{ comment.user }}</span>
-                            <time class="submit-date" datetime="2012-11-09T23:15:57+00:00">{{ comment.created_time|date:"Y-m-d H:i" }}</time>
+                            <span class="nickname">{{ comment.user.nick_name }}<span style="color: #31b0d5">{% if comment.user == article.user %}(作者){% endif %}</span></span>
+                            <time class="submit-date" datetime="2012-11-09T23:15:57+00:00">{{ comment.created_time|handel_time }}</time>
                             <div class="text">
-                                {{ comment.text }}
+                                {{ comment.text | safe }}
                             </div>
                         </li>
                     </ul>

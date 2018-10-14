@@ -54,8 +54,9 @@ class ArticleView(View):
         article.body = markdown.markdown(article.body)
 
         comment_list = article.comments_set.all()
+        for comment in comment_list:
+            comment.text = markdown.markdown(comment.text)
         article.increase_views()
-        article.update_comments_num()
         return render(request, 'sub-single.html', {
             'article': article,
             'comment_list': comment_list,

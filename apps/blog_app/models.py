@@ -49,6 +49,8 @@ class Post(models.Model):
         self.comments_num = len(self.comments_set.all())
         self.save(update_fields=['comments_num'])
 
+    def get_comments_num(self):
+        return self.comments_set.all().count()
 
     def __str__(self):
         return self.titel
