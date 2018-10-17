@@ -5,7 +5,8 @@ from django.views.generic.base import View
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Sum, Count
 
-from .models import Post, Categort, Tag, Comments
+from .models import Post, Categort, Tag, Comments, Reply
+from users.models import UserProfile
 from .forms import CommentFrom
 # Create your views here.
 
@@ -20,14 +21,19 @@ class IndexView(View):
         if categroty:
             all_post = all_post.filter(category__text=categroty)
 
+        tag = request.GET.get('tag', '')
+        if tag:
+            all_post = all_post.prefetch_related('tag').filter(tag__text=tag)
+
         year = request.GET.get('year', '')
         month = request.GET.get('month', '')
         if year and month:
-            all_post = Post.objects.filter(created_time__year=year,
-                                            created_time__month=month
-                                            ).order_by('-created_time')
+            all_post = Post.objects.filter(
+                created_time__year=year,
+                created_time__month=month
+                ).order_by('-created_time')
         all_post = all_post.order_by("-created_time")
-        page = Paginator(all_post,3)
+        page = Paginator(all_post, 3)
         page_num = request.GET.get('page', 1)
         try:
             page = page.page(page_num)
@@ -53,9 +59,10 @@ class ArticleView(View):
             return HttpResponseRedirect(reverse('index'))
         article.body = markdown.markdown(article.body)
 
-        comment_list = article.comments_set.all()
+        comment_list = article.comments_set.all().order_by('-created_time')
         for comment in comment_list:
             comment.text = markdown.markdown(comment.text)
+            comment.reply = comment.reply_set.all()
         article.increase_views()
         return render(request, 'sub-single.html', {
             'article': article,
@@ -84,7 +91,6 @@ class CommentsView(View):
         article_id = request.POST.get("article_id", 0)
         comments = request.POST.get("comments", "")
 
-        form = CommentFrom(request.POST)
         if int(article_id) > 0 and comments:
             course_comments = Comments()
             article = Post.objects.get(id=article_id)
@@ -95,3 +101,22 @@ class CommentsView(View):
             return HttpResponse('{"status":"success", "msg":"添加成功"}', content_type='application/json')
         else:
             return HttpResponse('{"status":"fail", "msg":"添加失败"}', content_type='application/json')
+
+
+# 回复
+class ReplyView(View):
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('login'))
+        to_user_id = request.POST.get("to_user_id", 0)
+        comments_id = request.POST.get("comments_id", 0)
+        reply_text = request.POST.get("reply_text", "")
+
+        if int(to_user_id) > 0 and int(comments_id) > 0 and reply_text:
+            reply = Reply()
+            reply.user = request.user
+            reply.to_user = UserProfile.objects.get(id=int(to_user_id))
+            reply.to_comment = Comments.objects.get(id=int(comments_id))
+            reply.text = reply_text
+            reply.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))

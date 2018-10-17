@@ -63,8 +63,8 @@ class Post(models.Model):
 class Comments(models.Model):
     user = models.ForeignKey(UserProfile, blank=True, null=True, on_delete=models.CASCADE, verbose_name='用户')
     post = models.ForeignKey(Post, blank=True, null=True, on_delete=models.CASCADE, verbose_name='文章')
-    text = models.CharField(max_length=50, verbose_name='评论')
-    created_time = models.DateTimeField(default=datetime.now, verbose_name='创建时间')
+    text = models.CharField(max_length=50, verbose_name='评论内容')
+    created_time = models.DateTimeField(default=datetime.now, verbose_name='评论时间')
 
     def __str__(self):
         return self.text
@@ -72,3 +72,25 @@ class Comments(models.Model):
     class Meta:
         verbose_name = '评论表'
         verbose_name_plural = '评论表'
+
+
+class Reply(models.Model):
+    text = models.CharField(max_length=50, verbose_name='回复内容')
+    to_comment = models.ForeignKey(Comments, blank=True, null=True, on_delete=models.CASCADE, verbose_name='回复的评论')
+    to_user = models.ForeignKey(UserProfile,
+                                blank=True, null=True,
+                                on_delete=models.CASCADE,
+                                related_name='to_user',
+                                verbose_name='回复的目标用户')
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name='用户')
+    reply_time = models.DateTimeField(default=datetime.now, verbose_name='回复时间')
+
+    def __str__(self):
+        return self.text
+
+    class Meta:
+        verbose_name = '回复表'
+        verbose_name_plural = '回复表'
+
+
+

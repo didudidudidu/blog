@@ -91,7 +91,7 @@
                 <div class="widget widget-archives">
                     <h3 class="widget-title">归档</h3>
                     <ul>
-                        {% for time in archiving_sum %}
+                        {% for time in archiving %}
                             <li>
                                 <a href="{% url 'index' %}?year={{ time.year }}&month={{ time.month }}">{{ time.year }} 年 {{ time.month }} 月</a>
                             </li>
@@ -123,7 +123,7 @@
                     <ul>
                         {% for tag in all_tag %}
                             <li>
-                                <a href="#">{{ tag.text }}</a>
+                                <a href="{% url 'index' %}?tag={{ tag.text }}">{{ tag.text }}</a>
                             </li>
                         {% empty %}
                             <li>

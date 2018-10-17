@@ -37,6 +37,7 @@ class LoginView(View):
                 {"login_form": login_from}
             )
 
+
 class LogoutView(View):
     """
     用户登出

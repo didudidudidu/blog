@@ -863,8 +863,8 @@ img {
 
 .comment-item:not(:last-child) {
     border-bottom: 1px #ccc solid;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
 }
 
 .comment-item .nickname,

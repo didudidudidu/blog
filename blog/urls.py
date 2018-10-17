@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 
-from blog_app.views import IndexView, ArticleView, BlogListView, CommentsView
+from blog_app.views import IndexView, ArticleView, BlogListView, CommentsView, ReplyView
 from users.views import LoginView, LogoutView
 
 urlpatterns = [
@@ -26,6 +26,7 @@ urlpatterns = [
     path('blog/', BlogListView.as_view(), name='blog'),
     path('article/<id>/', ArticleView.as_view(), name='article'),
     path('api/comments/', CommentsView.as_view(), name='comments'),
+    path('api/reply/', ReplyView.as_view(), name='reply'),
     path('about/', TemplateView.as_view(template_name='sub-about.html'), name='about'),
     path('contact/', TemplateView.as_view(template_name='sub-contact.html'), name='contact'),
     path('login/', LoginView.as_view(), name='login'),

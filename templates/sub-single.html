@@ -23,22 +23,50 @@
             <h3>发表评论</h3>
             <div class="row comment-form">
                 <div class="col-md-12">
-                    <label for="id_comment">评论：</label>
                     <textarea id="id_comment" required></textarea>
                     <button type="submit" class="comment-btn" id="form_comments">发表</button>
                 </div>
             </div>
             <div class="comment-list-panel">
-                <h3>评论列表，共 <span>{{ article.comments_num }}</span> 条评论</h3>
+                <h3>评论列表，共 <span>{{ article.get_comments_num }}</span> 条评论</h3>
                 {% for comment in comment_list %}
                     <ul class="comment-list list-unstyled">
                         <li class="comment-item">
                             <span class="nickname">{{ comment.user.nick_name }}<span style="color: #31b0d5">{% if comment.user == article.user %}(作者){% endif %}</span></span>
                             <time class="submit-date" datetime="2012-11-09T23:15:57+00:00">{{ comment.created_time|handel_time }}</time>
+{#                            <button>回复</button>#}
                             <div class="text">
                                 {{ comment.text | safe }}
                             </div>
+                            <form action="{% url 'reply' %}" method="post">
+                                    <input name="to_user_id" value="{{ comment.user.id }}" style="display: none"/>
+                                    <input name="comments_id" value="{{ comment.id }}" style="display: none"/>
+                                    <input name="reply_text"/>
+                                    <button type="submit">回复</button>
+                                    {% csrf_token %}
+                            </form>
                         </li>
+                        {% for reply in comment.reply %}
+                            <li class="comment-item" style="margin-left:50px;">
+                                <span>{{ reply.user.nick_name }}<span style="color: #31b0d5">{% if reply.user == article.user %}(作者){% endif %}</span></span>
+                                {% if reply.to_user != comment.user %}
+                                    <span style="color: #000000">回复--></span>
+                                    <span>{{ reply.to_user.nick_name }}<span style="color: #31b0d5">{% if reply.to_user == article.user %}(作者){% endif %}</span></span>
+                                {% endif %}
+                                <time class="submit-date" datetime="2012-11-09T23:15:57+00:00">{{ reply.reply_time|handel_time }}</time>
+{#                                <button>回复</button>#}
+                                <div class="text">
+                                    {{ reply.text | safe }}
+                                </div>
+                                <form action="{% url 'reply' %}" method="post">
+                                    <input name="to_user_id" value="{{ reply.user.id }}" style="display: none"/>
+                                    <input name="comments_id" value="{{ comment.id }}" style="display: none"/>
+                                    <input name="reply_text"/>
+                                    <button type="submit">回复</button>
+                                    {% csrf_token %}
+                                </form>
+                            </li>
+                        {% endfor %}
                     </ul>
                 {% endfor %}
             </div>
